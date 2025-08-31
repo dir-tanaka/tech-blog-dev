@@ -31,14 +31,14 @@ services:
     depends_on:
       - db
 
-  auth_app:
-    image: auth-app:0.0.2
-    container_name: auth_app
-    build: ./auth_app # Dockerfileがあるディレクトリ
+  tech-blog-auth-app:
+    image: tech-blog-auth-app:0.0.2
+    container_name: tech-blog-auth-app
+    build: ./tech-blog-auth-app # Dockerfileがあるディレクトリ
     volumes:
-      - ./auth_app/app:/app
-      - ./auth_app/Pipfile:/app/Pipfile
-      - ./auth_app/Pipfile.lock:/app/Pipfile.lock
+      - ./tech-blog-auth-app/app:/app
+      - ./tech-blog-auth-app/Pipfile:/app/Pipfile
+      - ./tech-blog-auth-app/Pipfile.lock:/app/Pipfile.lock
     ports:
       - "8888:8888"
     environment:
@@ -47,20 +47,20 @@ services:
     #   db:
     #     condition: service_healthy # dbサービスが正常と判断されてからappサービスを起動
 
-  frontend:
-    image: frontend:0.0.1
-    container_name: frontend
+  tech-blog-frontend:
+    image: tech-blog-frontend:0.0.1
+    container_name: tech-blog-frontend
     build:
-      context: ./frontend
+      context: ./tech-blog-frontend
       dockerfile: local.Dockerfile
     volumes:
-      - ./frontend/client/src:/app/client/src
-      - ./frontend/client/public:/app/client/public
-      - ./frontend/client/package.json:/app/client/package.json
-      - ./frontend/client/package-lock.json:/app/client/package-lock.json
-      - ./frontend/server/src:/app/server/src
-      - ./frontend/server/package.json:/app/server/package.json
-      - ./frontend/server/yarn.lock:/app/server/yarn.lock
+      - ./tech-blog-frontend/client/src:/app/client/src
+      - ./tech-blog-frontend/client/public:/app/client/public
+      - ./tech-blog-frontend/client/package.json:/app/client/package.json
+      - ./tech-blog-frontend/client/package-lock.json:/app/client/package-lock.json
+      - ./tech-blog-frontend/server/src:/app/server/src
+      - ./tech-blog-frontend/server/package.json:/app/server/package.json
+      - ./tech-blog-frontend/server/yarn.lock:/app/server/yarn.lock
     command: npm run start ./dist/server.js
     ports:
       - "3000:3000"
