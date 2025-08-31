@@ -1,0 +1,6 @@
+[submodule "tech-blog-auth-app"]
+	path = tech-blog-auth-app
+	url = git@github.com:dir-tanaka/tech-blog-auth-app.git
+[submodule "tech-blog-frontend"]
+	path = tech-blog-frontend
+	url = git@github.com:dir-tanaka/tech-blog-frontend.git

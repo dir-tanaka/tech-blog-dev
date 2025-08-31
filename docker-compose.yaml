@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    container_name: postgresql
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_DB: example
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin4:
+    image: dpage/pgadmin4:8.10
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./postgresql/pgadmin/config/servers.json:/pgadmin4/servers.json
+      - ./postgresql/pgadmin/config/preferences.json:/pgadmin/preferences.json
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@example.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_PREFERENCES_JSON_FILE: /pgadmin/preferences.json
+    depends_on:
+      - db
+
+  auth_app:
+    image: auth-app:0.0.2
+    container_name: auth_app
+    build: ./auth_app # Dockerfileがあるディレクトリ
+    volumes:
+      - ./auth_app/app:/app
+      - ./auth_app/Pipfile:/app/Pipfile
+      - ./auth_app/Pipfile.lock:/app/Pipfile.lock
+    ports:
+      - "8888:8888"
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/mydatabase
+    # depends_on:
+    #   db:
+    #     condition: service_healthy # dbサービスが正常と判断されてからappサービスを起動
+
+  frontend:
+    image: frontend:0.0.1
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: local.Dockerfile
+    volumes:
+      - ./frontend/client/src:/app/client/src
+      - ./frontend/client/public:/app/client/public
+      - ./frontend/client/package.json:/app/client/package.json
+      - ./frontend/client/package-lock.json:/app/client/package-lock.json
+      - ./frontend/server/src:/app/server/src
+      - ./frontend/server/package.json:/app/server/package.json
+      - ./frontend/server/yarn.lock:/app/server/yarn.lock
+    command: npm run start ./dist/server.js
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  pgadmin-data:
