@@ -34,7 +34,7 @@ services:
   tech-blog-auth-app:
     image: tech-blog-auth-app:0.0.2
     container_name: tech-blog-auth-app
-    build: ./tech-blog-auth-app # Dockerfileがあるディレクトリ
+    build: ./tech-blog-auth-app
     volumes:
       - ./tech-blog-auth-app/app:/app
       - ./tech-blog-auth-app/alembic.ini:/app/alembic.ini
