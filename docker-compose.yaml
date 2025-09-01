@@ -37,6 +37,8 @@ services:
     build: ./tech-blog-auth-app # Dockerfileがあるディレクトリ
     volumes:
       - ./tech-blog-auth-app/app:/app
+      - ./tech-blog-auth-app/alembic.ini:/app/alembic.ini
+      - ./tech-blog-auth-app/migrations:/app/migrations
       - ./tech-blog-auth-app/Pipfile:/app/Pipfile
       - ./tech-blog-auth-app/Pipfile.lock:/app/Pipfile.lock
     ports:
